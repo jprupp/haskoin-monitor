@@ -2,6 +2,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.util.concurrent.TimeUnit
 import java.util.stream.Stream
 
 val mapper = ObjectMapper()
@@ -16,7 +17,7 @@ fun best(): JsonNode {
 }
 
 fun monitor(): Stream<JsonNode> {
-    val client = OkHttpClient()
+    val client = OkHttpClient.Builder().readTimeout(1800, TimeUnit.SECONDS).build()
     val request = Request.Builder().url("https://btc.haskoin.com/api/events").build()
     val response = client.newCall(request).execute()
     val source = response.body()!!.byteStream()!!.bufferedReader().lines()!!
